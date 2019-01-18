@@ -4,8 +4,8 @@ package com.zzq.common;
  * Created by huguoju on 2016/12/29.
  */
 public enum DataSourceType {
-    read("read", "从库"),
-    write("write", "主库");
+    READ("read", "从库"),
+    WRITE("write", "主库");
     private String type;
 
     private String name;

@@ -60,7 +60,7 @@ public class MybatisConfiguration {
         MyAbstractRoutingDataSource proxy = new MyAbstractRoutingDataSource(size);
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         // 写
-        targetDataSources.put(DataSourceType.write.getType(),dataSource);
+        targetDataSources.put(DataSourceType.WRITE.getType(),dataSource);
         //多个读数据库时
         for (int i = 0; i < size; i++) {
             targetDataSources.put(i, readDataSources.get(i));

@@ -1,11 +1,12 @@
 package com.zzq.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sql.DataSource;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,14 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 数据库配置：解析properties文件
@@ -28,7 +21,9 @@ import java.util.Map;
 @Configuration
 @PropertySource(value = {"classpath:application-dev.yml"})
 public class DataBaseConfiguration {
-    private static Logger logger = Logger.getLogger(DataBaseConfiguration.class);
+
+    private static Logger logger = LoggerFactory.getLogger(DataBaseConfiguration.class);
+
     @Value("${spring.datasource.type}")
     private Class<? extends DataSource> dataSourceType;
 
@@ -40,7 +35,6 @@ public class DataBaseConfiguration {
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource writeDataSource() {
         logger.info("-------------------- writeDataSource init ---------------------");
-        System.out.println("-------------------- writeDataSource init ---------------------");
         return DataSourceBuilder.create().type(dataSourceType).build();
     }
     /**
@@ -51,7 +45,6 @@ public class DataBaseConfiguration {
     @ConfigurationProperties(prefix = "spring.slave")
     public DataSource readDataSource(){
         logger.info("-------------------- readDataSource init ---------------------");
-        System.out.println("-------------------- readDataSource init ---------------------");
         return DataSourceBuilder.create().type(dataSourceType).build();
     }
 
@@ -59,7 +52,6 @@ public class DataBaseConfiguration {
     @ConfigurationProperties(prefix = "spring.read")
     public DataSource readDataSource2(){
         logger.info("-------------------- readDataSource2 init ---------------------");
-        System.out.println("-------------------- readDataSource2 init ---------------------");
         return DataSourceBuilder.create().type(dataSourceType).build();
     }
 
@@ -93,7 +85,7 @@ public class DataBaseConfiguration {
     public AbstractRoutingDataSource routingDataSource() {
         MyAbstractRoutingDataSource proxy = new MyAbstractRoutingDataSource(dataSourceSize);
         Map<Object, Object> targetDataSources = new HashMap<>(2);
-        targetDataSources.put(DataSourceType.write.getType(), writeDataSource());
+        targetDataSources.put(DataSourceType.WRITE.getType(), writeDataSource());
         targetDataSources.put(0, readDataSource());
         proxy.setDefaultTargetDataSource(writeDataSource());
         proxy.setTargetDataSources(targetDataSources);

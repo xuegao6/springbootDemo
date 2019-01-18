@@ -11,7 +11,6 @@
 package com.zzq.model;
 
 /**
- * Created by zhengping.zhu
  * on 2017/3/22.
  */
 public class Result<T> {
